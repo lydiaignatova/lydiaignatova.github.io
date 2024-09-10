@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Introduction Paragraph -->
+        <h2>CS 180 Project 1: Images of the Russian Empire</h2>
+        <p class="intro">Welcome to my CS 180 project 1!</p>
+
+        <p class="intro">In this project, I worked on finding a way to take digitized Prokudin-Gorskii glass plate images and visualize them as RGB images.</p> 
+            
+
+        <!-- Small Images Section -->
+        <h2>The JPGs</h2>
+        <p>I started off with handling small .jpg images. In order to process these, I went through the following steps:</p>
+        <ol>
+            <li>Load the image.</li>
+            <li>Split the image into 3 equal parts vertically to approximate the b r g frames.</li>
+            <li>For both the red channel and the green channel, </li>
+                <ol>
+                    <li>In a square of [-15, 15] pixels offsets, move around the channel
+                        to see if it aligns well by computing the normalized cross-correlation. Only compute the
+                        normalized cross-correlation of the inside of the image by not penalizing the outer-most 5% to avoid image edges getting in the way. 
+                        Keep track of the best displacement, which corresponds to the highest normalized cross-correlation. 
+                    </li>
+                </ol>
+            <li>Combine together the 3 aligned channels into an RGB image. </li>
+            <li>Apply contrasting to the combined image to normalize the pixel values between [0, 1]. </li>
+            <li>Enjoy! </li>
+        </ol>
+
+        <div class="small-images">
+            <div class="small-image-item">
+                <img src="media/input/cathedral.jpg" alt="Image 1">
+                <p class="caption">Cathedral Input</p>
+            </div>
+            <div class="small-image-item">
+                <img src="media/output/cathedral.jpg" alt="Image 2">
+                <p class="caption">Cathedral output. Green Displacement: (2, 5)
+                    Red Displacement: (3, 12)</p>
+            </div>
+            <div class="small-image-item">
+                <img src="media/input/monastery.jpg" alt="Image 3">
+                <p class="caption">Monastary Input</p>
+            </div>
+            <div class="small-image-item">
+                <img src="media/output/monastery.jpg" alt="Image 4">
+                <p class="caption">Monastery output. Green Displacement: (2, -3)
+                    Red Displacement: (2, 3) </p>
+            </div>
+            <div class="small-image-item">
+                <img src="media/input/tobolsk.jpg" alt="Image 5">
+                <p class="caption">Tobolsk Input</p>
+            </div>
+            <div class="small-image-item">
+                <img src="media/output/tobolsk.jpg" alt="Image 6">
+                <p class="caption">Tobolsk Output. Green Displacement: (3, 3)
+                    Red Displacement: (3, 6) </p>
+            </div>
+        </div>
+
+        <h2>The TIFs</h2>
+        <!-- Small Images Section -->
+        <p class="intro">After tackling the JPGs, I moved on to the TIFs. Thankfully, they didn't prove too tough, either.
+            Though I could no longer rely on exhaustive search, I implemented a recursive image pyramid algorithm, instead. For each image, I did the following:
+        </p>
+
+        <ol>
+            <li>Load the image.</li>
+            <li>Split the image into 3 equal parts vertically to approximate the b r g frames.</li>
+            <li>For both the red channel and the green channel, </li>
+                <ol>
+                    <li>Get down to the coarsest image scale. I chose to halve the image 5 times. </li>
+                    <li>Compute the displacement as for the JPGs, this image is small enough to handle it. </li>
+                    <li>Double the best displacement found and scale the image back up. </li>
+                    <li>Check each NCC of each displacement within 3 pixels from the "best displacement" from the coarser level to get the new best displacement. </li>
+                    <li>Repeat steps 3 & 4 until you're back at the original image size. </li>
+                </ol>
+            <li>Combine together the 3 aligned channels into an RGB image. </li>
+            <li>Apply contrasting to the combined image to normalize the pixel values between [0, 1]. </li>
+            <li>Enjoy! </li>
+        </ol>
+
+        <p>Note that Emir (top center) refused to cooperate, as the different color channels have such severe brightness differences 
+            that the blue and red refuse to cooperate with my naive algorithm. Also, note that there were 10 unique tifs to convert, but the three generations were repeated three times, 
+            for column filling aesthetics, and so each of them gets to star in one of the images.</p>
+        
+        <div class="large-images">
+            <div class="large-image-row">
+                <img src="media/output/church.jpg" alt="Image 7">
+                <p class="caption">Church. Green Displacement: (-16, 24)
+                    Red Displacement: (-14, 58)</p>
+            </div>
+            <div class="large-image-row">
+                <img src="media/output/emir.jpg" alt="Image 8">
+                <p class="caption">Emir. Green Displacement: (24, 49)
+                    Red Displacement: (-573, -280) </p>
+            </div>
+            <div class="large-image-row">
+                <img src="media/output/harvesters.jpg" alt="Image 9">
+                <p class="caption">Harvesters. Green Displacement: (16, 60)
+                    Red Displacement: (13, 124) </p>
+            </div>
+            <div class="large-image-row">
+                <img src="media/output/icon.jpg" alt="Image 10">
+                <p class="caption">Icon. Green Displacement: (17, 41)
+                    Red Displacement: (23, 89) </p>
+            </div>
+            <div class="large-image-row">
+                <img src="media/output/lady.jpg" alt="Image 10">
+                <p class="caption">Lady. Green Displacement: (9, 55)
+                    Red Displacement: (10, 114) </p>
+            </div>
+            <div class="large-image-row">
+                <img src="media/output/melons.jpg" alt="Image 10">
+                <p class="caption">Melons. Green Displacement: (8, 82)
+                    Red Displacement: (11, 177) </p>
+            </div>
+            <div class="large-image-row">
+                <img src="media/output/onion_church.jpg" alt="Image 10">
+                <p class="caption">Onion Church. Green Displacement: (27, 51)
+                    Red Displacement: (36, 108) 
+                    </p>
+            </div>
+            <div class="large-image-row">
+                <img src="media/output/sculpture.jpg" alt="Image 10">
+                <p class="caption">Sculpture. Green Displacement: (-11, 33)
+                    Red Displacement: (-26, 140)</p>
+            </div>
+            <div class="large-image-row">
+                <img src="media/output/self_portrait.jpg" alt="Image 10">
+                <p class="caption">Self-portrait. Green Displacement: (27, 79)
+                    Red Displacement: (34, 175) </p>
+            </div>
+
+            <div class="large-image-row">
+                <img src="media/output/three_generations.jpg" alt="Image 10">
+                <p class="caption">Three generations. Green Displacement: (12, 55)
+                    Red Displacement: (9, 112) </p>
+            </div>
+            
+            <div class="large-image-row">
+                <img src="media/output/three_generations.jpg" alt="Image 10">
+                <p class="caption">Three generations. Green Displacement: (12, 55)
+                    Red Displacement: (9, 112) </p>
+            </div>
+
+            <div class="large-image-row">
+                <img src="media/output/three_generations.jpg" alt="Image 10">
+                <p class="caption">Three generations. Green Displacement: (12, 55)
+                    Red Displacement: (9, 112) </p>
+            </div>
+            
+        </div>
+
+
+        <h2>The Extras</h2>
+
+        <p>I also applied this process to a few more images from the <a href="https://www.loc.gov/collections/prokudin-gorskii/">Prokudin-Gorskii Collection</a>.</p>
+        
+        <div class="small-images">
+            <div class="small-image-item">
+                <img src="media/additional/roses_input.jpg" alt="Image 1">
+                <p class="caption">Roses Input</p>
+            </div>
+            <div class="small-image-item">
+                <img src="media/additional/roses_output.jpg" alt="Image 2">
+                <p class="caption">Roses output. Green Displacement: (0, 3)
+                    Red Displacement: (-2, 7)</p>
+            </div>
+            <div class="small-image-item">
+                <img src="media/additional/cross_input.jpg" alt="Image 3">
+                <p class="caption">Cross Input</p>
+            </div>
+            <div class="small-image-item">
+                <img src="media/additional/cross_output.jpg" alt="Image 4">
+                <p class="caption">Cross output. Green Displacement: (0, 4)
+                    Red Displacement: (0, 9)  </p>
+            </div>
+            <div class="small-image-item">
+                <img src="media/additional/table_input.jpg" alt="Image 5">
+                <p class="caption">Table Input</p>
+            </div>
+            <div class="small-image-item">
+                <img src="media/additional/table_output.jpg" alt="Image 6">
+                <p class="caption">Table Output. Green Displacement: (1, 3)
+                    Red Displacement: (2, 7) </p>
+            </div>
+        </div>
+
+        
+        <!-- Reverse Reverse Section -->
+        <h2>Reverse Reverse</h2>
+
+        <p>Finally, I wanted to see what some of my own pictures would look like 
+            if they had been captured by Sergei Mikhailovich. The jelly bean one highlights how much each color channel varies! </p>
+
+        <div class="small-images">
+            <div class="small-image-item">
+                <img src="media/mine/hobbit.JPG" alt="Image 1">
+                <p class="caption">Hobbit House Original</p>
+            </div>
+            <div class="small-image-item">
+                <img src="media/mine/hobbit_separated.JPG" alt="Image 2">
+                <p class="caption">Hobbit House Split</p>
+            </div>
+            <div class="small-image-item">
+                <img src="media/mine/jelly_beans.JPG" alt="Image 3">
+                <p class="caption">Jelly Beans Original</p>
+            </div>
+            <div class="small-image-item">
+                <img src="media/mine/jelly_beans_separated.JPG" alt="Image 4">
+                <p class="caption">Jelly Beans Split</p>
+            </div>
+            <div class="small-image-item">
+                <img src="media/mine/slide.JPG" alt="Image 5">
+                <p class="caption">Slide Original</p>
+            </div>
+            <div class="small-image-item">
+                <img src="media/mine/slide_separated.JPG" alt="Image 6">
+                <p class="caption">Slide Split</p>
+            </div>
+        </div>
+    </div>
+
+    <h2>Sources</h2>
+    <p>This webpage was developed with guidance from a conversation with ChatGPT. The conversation was used to structure the HTML and CSS layout. You can view the full conversation <a href="media/sources/chat.txt">here</a>.</p>
+
+</body>
+</html>
