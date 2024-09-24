@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 2</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Introduction Paragraph -->
+        <div class="section">
+            <h2>CS 180 Project 2: Fun with Filters and Frequencies</h2>
+            <p>In this project, I had fun with filters and frequencies.</p>
+        </div>
+
+        <div class="section">
+            <h2>Part 1.1: Finite Difference Operator</h2>
+
+            <p>I started off by applying a simple finite difference filter in the x and y directions. The x filter has the shape [1, -1] 
+                to be able to detect changes as you move left to right across the image,
+                and the y filter has the shape [[1], [-1]] to detect changes when moving vertically. 
+                </p>
+            <p>First, I applied the dx and dy filters, and then I computed the gradient magnitude by using the pythagorean theorem. In order to do this, at every pixel, I calculated the dx and dy values, and calculated the gradient magnitude by taking the square root of dx^2 + dy^2. 
+                </p>
+
+            <div class="large-images">
+                <img src="media/cameraman 1.1.png" alt="Cameraman 1.1">
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Part 1.2: DoG Filter &#128021;</h2>
+
+            <p>In order to make the process less noisy, I got cleaner edges by creating a blurred image and then applying the dx and dy filters from above.
+                Blurring first yields crisper edges because noise between adjacent pixels doesn't play as large of a role. 
+            </p>
+            
+            <div class="large-images">
+                <img src="media/cameraman 1.2.1.png" alt="Cameraman 1.2.1">
+            </div>
+            
+            <p>I was also able to get the same results with a single convolution by creating a derviative of gaussian filters, as shown below.  </p>
+
+            <div class="large-images">
+                <img src="media/cameraman 1.2.2.png" alt="Cameraman 1.2.2">
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Part 2.1: Image Sharpening</h2>
+
+            <p>In order to sharpen an image, we can smooth it first, then compute the higher frequencies by subtracting
+                out the smooth portion, and add it back in! This can be done with a single convolution operation.
+            </p>
+            
+
+            <div class="large-images">
+                <img src="media/tajmahal 2.1.png" alt="Sharp Mahal">
+            </div>
+
+            <p>I also applied this to my own sharp image of a forest, and it worked pretty well too!
+            </p>
+
+            <div class="large-images">
+                <img src="media/forest 2.1.png" alt="Forest">
+            </div>
+        </div>
+
+
+        <div class="section">
+            <h2>Part 2.2: Hybrid Images</h2>
+
+            <p>To create hybrid images, I first used the given alignment code to make Nutmeg and Derek's eyes line up.
+
+                Then, I converted both to grayscale for the first step. 
+
+                In order to blend the images together, I applied a low-pass filter (essentially trimming high frequencies by smoothing with a Gaussan filter) to one image,
+                and a high-pass filter to the other (essentially the sharpening filter from the earlier section). 
+            </p>
+
+            <p>
+                I tried keeping the high frequencies from the human, and the low frquencies from the cat. 
+                I also tried keeping the high frequencies from the cat, and the low frquencies from the human.
+            </p>
+
+            <p>
+                I ran a hyperparameter sweep across different sigma values, and this was my favorite result. Here, sigma for the high frequency cutoff is 8, and for the low frequency it's 3.
+            </p>
+
+            
+            <div class="large-images">
+                <img src="media/hybrid catty 2.2.png" alt="Catty">
+            </div>
+
+            <p>
+                Here is the log magnitude plot of the fourier transform of the different images.
+            </p>
+
+            <div class="large-images">
+                <img src="media/fft plots.png" alt="FFT Plots">
+            </div>
+
+            <p>
+                I also tried to use color to enhance the effect. I think it works better to use color from both components to allow for the most natural blend.
+            </p>
+
+            <div class="large-images">
+                <img src="media/colored catty.png" alt="Colored Catty">
+            </div>
+
+            <p>
+                To play around with the method, I also applied it to stock images of a man wearing a hat and a woman wearing a scarf.
+                I also tried a transition with a stock image of ice cream melting. I would consider the stock image people a failed hybrid image because their facial features don't blend together very smoothly. 
+            </p>
+
+            <div class="large-images">
+                <img src="media/accessories.png" alt="Stock People">
+            </div>
+
+            <div class="large-images">
+                <img src="media/ice cream blend.png" alt="Ice Cream">
+            </div>
+
+
+        </div>
+
+        <div class="section">
+            <h2>Part 2.3: Gaussian and Laplacian Stacks</h2>
+
+            <p>To create a Gaussian stack, I recursively applied a gaussian filter to a more and more blurry image. To get the Laplacian stack, I subtracted sequential images from the Gaussian Stack. 
+                Here is what I got for the apple and orange images:
+            </p>
+
+            <div class="large-images">
+                <img src="media/stacks.png" alt="Stacks">
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Part 2.4: Multiresolution Blending</h2>
+
+            <p>In order to blend together the images, I started off with the low features (from the Gaussian stack) at the lowest level, and added in the Laplacian features for each next layer.
+                I ended up with these pictures:
+            </p>
+
+            <div class="large-images">
+                <img src="media/fruits.png" alt="Fruits">
+            </div>
+
+            <p>Here is another multiresolution blending example.
+            </p>
+
+            <div class="large-images">
+                <img src="media/mountainsky.png" alt="Mountain Sky">
+            </div>
+
+            <p>Finally, here is a multiresolution blending example with an irregular mask, featuring our two favorite stock image friends. 
+            </p>
+
+            <div class="large-images">
+                <img src="media/peopleblend.png" alt="People">
+            </div>
+
+        </div>
+
+        <div class="section">
+            <h2>Sources</h2>
+            <p>This webpage was developed with guidance from a conversation with ChatGPT. The conversation was used to structure the HTML and CSS layout. You can view the full conversation <a href="media/chat.txt">here</a>.</p>
+        </div>
+
+
+
+
+</body>
+</html>
