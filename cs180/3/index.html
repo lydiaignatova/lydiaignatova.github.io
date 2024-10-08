@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 3</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Introduction Paragraph -->
+        <div class="section">
+            <h2>CS 180 Project 3: Face Morphing and Modelling a Photo Collection</h2>
+            <p>In this project, I morphed some faces.</p>
+        </div>
+
+        <div class="section">
+            <h2>Part 1: Defining Correspondances</h2>
+
+            For this project, I implemented code for selecting facial keypoints with matplotlib's ginput function.
+
+            In total, I used 30 points, including the 4 corners of the image. 
+
+            Here are the generated points and triangles for my blends of Barack Obama and Kamala Harris.  
+
+            <div class="images-sides">
+                <img src="media/barack_triangle.jpg" alt="Barack Triangles">
+                <img src="media/kamala_triangle.jpg" alt="Kamala Triangles">
+            </div>
+        </div>
+
+        <div class="section"></div>
+            <h2>Part 2: Computing the Mid-Way Face</h2>
+
+            When blending together Barack Obama and Kamala Harris, this is the generated midway face.
+            <div class="large-images">
+                <img src="media/baramala_trio.jpg" alt="Midway Face">
+            </div>
+        </div>
+
+        <div class="section"></div>
+            <h2>Part 3: Morph Sequence</h2>
+
+            This is the process of blending together Barack Obama and Kamala Harris over 50 steps.
+            <div class="large-images">
+                <img src="media/baramala.gif" alt="Morph">
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Part 4: Mean Face of a Population</h2>
+
+            I decided to use the <a href="https://web.archive.org/web/20210305094647/http://www2.imm.dtu.dk/~aam/datasets/datasets.html">Danes</a>
+            dataset to calculate the mean face of a population. 
+
+            Here is the average happy face:
+
+            <div class="large-images">
+                <img src="media/average dane.jpg" alt="Average Dane">
+            </div>
+
+            Here are some happy Danish faces, warped into the average shape:
+            
+            <div class="large-images"></div>
+                <img src="media/reshaped1.jpg" alt="Average Dane 1">
+                <img src="media/reshaped2.jpg" alt="Average Dane 2">
+                <img src="media/reshaped3.jpg" alt="Average Dane 3">
+                <img src="media/reshaped4.jpg" alt="Average Dane 4">
+                <img src="media/reshaped5.jpg" alt="Average Dane 5">
+            </div>
+            
+
+            Here is Zendaya's face, warped into the Danish geometry, and vice versa.
+            
+            <div class="large-images">
+                <img src="media/zendaya_warped.jpg" alt="Zendaya Warped">
+            </div>
+        </div>
+
+        <div class="section"></div>
+            <h2>Part 5: Caricatures</h2>
+
+            In order to calulate a caricature of Zendaya's face, I calculated the difference between Zendaya's face shape and the average danish face shape. Then, to get an exaggerated Zendaya, I subtracted that difference from Zendaya's shape, and warped Zendaya to the new generated shape. Similarly, to calculate an exaggerated danish shape for Zendaya's face, I added on 0.1 times the difference to the averaged shape, and warped to those points. 
+
+            Here are the results:
+
+            <div class="large-images">
+                <img src="media/zendaya_caricature.jpg" alt="Zendaya Caricature">
+            </div>
+        </div>
+
+        <div class="section"></div>
+            <h2>Bells and Whistles: Morphing Music Movie</h2>
+
+            I created a morphing music video of the Friends characters. 
+            
+            <div class="large-images">
+                <iframe width="420" height="315" src="https://youtube.com/embed/Mi3_D9rZRtA"></iframe>
+            </div>
+            
+            
+            If the embedded video gives you trouble, please vist https://youtube.com/embed/Mi3_D9rZRtA. 
+
+        </div>
+
+        <div class="section"></div>
+            <h2>Bloopers</h2>
+
+            Here are some behind the scenes of warps before I finished fixing my code.
+            
+            <div class="images-sides">
+                <img src="media/ugly barack distorted_comparison.jpg" alt="Shattered Barack">
+                <img src="media/order of operations matters.jpg" alt="Order of operations">
+            </div>
+
+            
+        </div>
+
+
+</body>
+</html>

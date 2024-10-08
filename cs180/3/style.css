@@ -1,0 +1,50 @@
+/* Ensure body and html take up full height */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body {
+    font-family: 'Lato', sans-serif;
+    background-color: #c0d9e7;
+    color: #333;
+    padding: 20px 0; /* Vertical padding */
+}
+
+/* General section styling */
+.section {
+    padding: 40px 0; /* Vertical space between sections */
+    width: 100%;
+}
+
+/* Headings and text are left-aligned */
+.section h2, .section p {
+    text-align: left;
+    margin: 0 auto; /* Ensure consistent margins */
+    max-width: 1200px; /* Optional: limit width for readability */
+}
+
+/* Center large images only */
+.large-images {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.large-images img {
+    width: 50%; /* Image takes up half the width */
+    height: auto;
+}
+
+.images-sides {
+    display: flex;
+    justify-content: space-between;
+}
+
+.images-sides img {
+    width: 48%; /* Each image takes 48% of the width */
+    height: auto; /* Maintains the aspect ratio */
+    object-fit:contain;
+}
