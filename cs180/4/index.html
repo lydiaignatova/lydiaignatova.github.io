@@ -6,6 +6,10 @@
     <title>Project 4</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
 </head>
 <body>
     <div class="container">
@@ -49,9 +53,142 @@
         <div class="section">
             <h2>Part 1: Recover Homographies </h2>
 
-            In order to recover the homographies, I set up an equation to solve for the 8 unknown variables in our transformation matrix, H. 
+            In order to recover the homographies, I set up an equation to solve for the 8 unknown variables in our transformation matrix, H.
+            
+            Here's an example of how we want to be able to map points using H, and the matrix system we generate.
 
-            I used np.linalg.lstsq in order to solve the system, since I tended to use more than the minimum 4 correspondances, so I had an overdetermined system.
+            <p> \[
+                \begin{bmatrix}
+                wx' \\
+                wy' \\
+                w
+                \end{bmatrix}
+                =
+                H
+                \begin{bmatrix}
+                x \\
+                y \\
+                1
+                \end{bmatrix}
+                \]
+            </p>
+            
+            <p> \[
+                \begin{bmatrix}
+                wx' \\
+                wy' \\
+                w
+                \end{bmatrix}
+                =
+                \begin{bmatrix}
+                a & b & c \\
+                d & e & f \\
+                g & h & 1
+                \end{bmatrix}
+                \begin{bmatrix}
+                x \\
+                y \\
+                1
+                \end{bmatrix}
+                \]
+            </p>
+
+            <p> \[
+                \begin{bmatrix}
+                wx' \\
+                wy' \\
+                w
+                \end{bmatrix}
+                =
+                \begin{bmatrix}
+                ax + by + c \\
+                dx + ey + f \\
+                gx + hy + 1
+                \end{bmatrix}
+                \]
+            </p>
+
+            <p>
+                \[
+                \begin{cases}
+                ax + by + c = (gx + hy + 1)x' \\
+                dx + ey + f = (gx + hy + 1)y' 
+                \end{cases}
+                \]
+            </p>
+
+            <p></p>
+                \[
+                \begin{cases}
+                ax + by + c -gxx' -hyx' = x' \\
+                dx + ey + f -gxy' -hyy' = y' 
+                \end{cases}
+                \]
+            </p>
+
+            <p> \[
+                \begin{bmatrix}
+                x & y & 1 & 0 & 0 & 0 & -xx' & -yx'  \\
+                0 & 0 & 0 & x & y & 1 & -xy' & -yy' 
+                \end{bmatrix}
+                \begin{bmatrix}
+                a \\
+                b \\
+                c \\
+                d \\
+                e \\
+                f \\
+                g \\
+                h 
+                \end{bmatrix}
+                =
+                \begin{bmatrix}
+                x' \\
+                y' 
+                \end{bmatrix}
+                \]
+            </p>
+
+
+            <p> \[
+                \begin{bmatrix}
+                x_1 & y_1 & 1 & 0 & 0 & 0 & -x_1 x_1' & -y_1x_1'  \\
+                0 & 0 & 0 & x_1 & y_1 & 1 & -x_1y_1' & -y_1y_1' \\
+                x_2 & y_2 & 1 & 0 & 0 & 0 & -x_2 x_2' & -y_2x_2'  \\
+                0 & 0 & 0 & x_2 & y_2 & 1 & -x_2y_2' & -y_2y_2' \\
+                x_3 & y_3 & 1 & 0 & 0 & 0 & -x_3 x_3' & -y_3x_3'  \\
+                0 & 0 & 0 & x_3 & y_3 & 1 & -x_3y_3' & -y_3y_3' \\
+                x_4 & y_4 & 1 & 0 & 0 & 0 & -x_4 x_4' & -y_4x_4'  \\
+                0 & 0 & 0 & x_4 & y_4 & 1 & -x_4y_4' & -y_4y_4' \\
+                & & & & \vdots
+                \end{bmatrix}
+                \begin{bmatrix}
+                a \\
+                b \\
+                c \\
+                d \\
+                e \\
+                f \\
+                g \\
+                h 
+                \end{bmatrix}
+                =
+                \begin{bmatrix}
+                x_1' \\
+                y_1' \\
+                x_2' \\
+                y_2' \\
+                x_3' \\
+                y_3' \\
+                x_4' \\
+                y_4' \\
+                \vdots 
+                \end{bmatrix}
+                \]
+            </p>
+            
+            Since this is now in the form Ax = b with x as the unknown, I was able to use np.linalg.lstsq in order to solve the system.
+            This worked well because I tended to use more than the minimum 4 correspondances, so I had an overdetermined system.
 
         </div>
 
@@ -116,7 +253,7 @@
             
             Then, I computed the desired output shape by seeing how far off the reference points were from the sides in the warped image and the reference image.
 
-            Next, I filled in the appropriate parts of the output image with both the warped image and the reference image. Here are my three example mosaics!
+            Next, I filled in the appropriate parts of the output image with both the warped image and the reference image, using weighted averaging to avoid strong edge artifacts. Here are my three example mosaics!
 
             <table>
                 <tr>
