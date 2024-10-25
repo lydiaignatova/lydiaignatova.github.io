@@ -15,17 +15,21 @@
     <div class="container">
         <!-- Introduction Paragraph -->
         <div class="section">
-            <h2>CS 180 Project 4: (Auto)stitching and Photo Mosaics</h2>
+            <h1>CS 180 Project 4: (Auto)stitching and Photo Mosaics</h1>
             <p>In this project, I stitched together and rectified some images.</p>
+        </div>
+
+        <div class="section">
+            <h1>Project 4A: Image Warping & Mosaicing</h1>
         </div>
 
 
         <div class="section">
-            <h2>Part 0: Shoot & Digitize Images </h2>
+            <h2>Part 1: Shoot & Digitize Images </h2>
 
-            I collected a ton of images of the past week for this project, here are the ones I ended up using.
+            <p> I collected a ton of images of the past week for this project, here are the ones I ended up using. </p>
 
-            In order to make images work well with the mosaic, I made sure to keep the center of projection as constant as possible. I also tried to find interesting geometries that would make finding corresponding points simple. 
+            <p> In order to make images work well with the mosaic, I made sure to keep the center of projection as constant as possible. I also tried to find interesting geometries that would make finding corresponding points simple.  </p>
 
             <table>
                 <tr>
@@ -40,7 +44,7 @@
                 </tr>
             </table>
 
-            In order to make images work well with rectfication, I made sure to have images that have a distinct rectangular shape in them. 
+            <p> In order to make images work well with rectfication, I made sure to have images that have a distinct rectangular shape in them. </p>
             <table>
                 <tr>
                     <td><img src="media/wave_puzzle_med.jpg" alt="Wave Puzzle" width="95%"></td>
@@ -51,11 +55,11 @@
         </div>
 
         <div class="section">
-            <h2>Part 1: Recover Homographies </h2>
+            <h2>Part 2: Recover Homographies </h2>
 
-            In order to recover the homographies, I set up an equation to solve for the 8 unknown variables in our transformation matrix, H.
+            <p> In order to recover the homographies, I set up an equation to solve for the 8 unknown variables in our transformation matrix, H. </p>
             
-            Here's an example of how we want to be able to map points using H, and the matrix system we generate.
+            <p> Here's an example of how we want to be able to map points using H, and the matrix system we generate. </p>
 
             <p> \[
                 \begin{bmatrix}
@@ -187,15 +191,33 @@
                 \]
             </p>
             
-            Since this is now in the form Ax = b with x as the unknown, I was able to use np.linalg.lstsq in order to solve the system.
-            This worked well because I tended to use more than the minimum 4 correspondances, so I had an overdetermined system.
+            <p> Since this is now in the form Ax = b with x as the unknown, I was able to use np.linalg.lstsq in order to solve the system.
+            This worked well because I tended to use more than the minimum 4 correspondances, so I had an overdetermined system. </p>
 
+            <p> For Proj 4A, I had to manually assign correspondances. Here are the corresponding points I marked, using ginput with matplotlib.</p>
+
+            <table>
+                <tr>
+                    <td><img src="media/blackwell_straight_med_tagged.jpg" alt="BAIR 1" width="95%"></td>
+                    <td><img src="media/blackwell_study_med_tagged.jpg" alt="Blackwell 1" width="95%"></td>
+                </tr>
+                <tr>
+                    <td><img src="media/bair_hall_tagged.jpg" alt="BAIR 1" width="95%"></td>
+                    <td><img src="media/bair_wall_tagged.jpg" alt="Blackwell 1" width="95%"></td>
+                </tr>
+                <tr>
+                    <td><img src="media/ihouse_chandelier_tagged.jpg" alt="BAIR 2" width="95%"></td>
+                    <td><img src="media/ihouse_roof_tagged.jpg" alt="Blackwell 2" width="95%"></td>
+                </tr>
+            </table>
+
+            
         </div>
 
-        <div class="section"></div>
-            <h2>Part 2: Warp the Images</h2>
+        <div class="section">
+            <h2>Part 3: Warp the Images</h2>
 
-            Then, I implemented the warpImage function. First, I computed the output shape of the resulting image by figuring out what coordinates the orignal corners of the image mapped to by transforming the points with the transformation matrix H.
+            <p> Then, I implemented the warpImage function. First, I computed the output shape of the resulting image by figuring out what coordinates the orignal corners of the image mapped to by transforming the points with the transformation matrix H.
 
             Once this shape was established, I figured out how to offset the warped image to make it fit in the frame. 
 
@@ -203,7 +225,8 @@
 
             Finally, I went back in and blacked out the pixels which were filled based on nearest pixel, but were actually not present in the orignal image. 
 
-            All together, this is an example of a warped image of Blackwell residence hall. I did it in both directions. 
+            All together, this is an example of a warped image of Blackwell residence hall. I did it in both directions.  </p>
+            
             <table>
                 <tr>
                     <td><img src="media/blackwell_straight_med_tagged.jpg" alt="Blackwell Straight" width="95%"></td>
@@ -216,11 +239,11 @@
             </table>
         </div>
 
-        <div class="section"></div>
-            <h2>Part 4: Image Rectification</h2>
+        <div class="section">
+            <h2>Part 3 Examples: Image Rectification</h2>
 
 
-            For Part 3, Image Warping, 2 images with corresponding points were necessary.
+            <p>For Part 3, Image Warping, 2 images with corresponding points were necessary.
 
             In this section, I rectified images based on known shapes.
 
@@ -230,7 +253,7 @@
 
             Then, I computed the H matrix going from the corners to the rectangular coordinates. Finally, I applied my warpImage function.
 
-            Here are two examples I got, sorry for the poor resolution! 
+            Here are two examples I got, sorry for the poor resolution! </p>
 
             <table>
                 <tr>
@@ -245,30 +268,32 @@
         </div>
 
         <div class="section">
-            <h2>Part 5: Mosaic</h2>
+            <h2>Part 4: Mosaic</h2>
             
-            Finally, I figured out how to combine together images into image mosaics. In order to do this, I took a one-shot approach. 
+            <p> Finally, I figured out how to combine together images into image mosaics. In order to do this, I took a one-shot approach. 
 
             First, I warped one of the images to match the shape of the other image. 
             
             Then, I computed the desired output shape by seeing how far off the reference points were from the sides in the warped image and the reference image.
 
-            Next, I filled in the appropriate parts of the output image with both the warped image and the reference image, using weighted averaging to avoid strong edge artifacts. Here are my three example mosaics!
+            Next, I filled in the appropriate parts of the 
+            output image with both the warped image and the 
+            reference image, using a feathering alpha channel to avoid strong edge artifacts. Here are my three example mosaics! </p>
 
             <table>
                 <tr>
-                    <td><img src="media/blackwell_straight_med.jpg" alt="Wave" width="95%"></td>
-                    <td><img src="media/blackwell_study_med.jpg" alt="Blackwell Study" width="95%"></td>
+                    <td><img src="media/blackwell_straight_med.jpg" alt="Wave" width="45%"></td>
+                    <td><img src="media/blackwell_study_med.jpg" alt="Blackwell Study" width="45%"></td>
                     <td><img src="media/blackwell_mosaic.jpg" alt="Blackwell Study" width="95%"></td>
                 </tr>
                 <tr>
-                    <td><img src="media/bair_hall.jpg" alt="Wave" width="95%"></td>
-                    <td><img src="media/bair_wall.jpg" alt="Blackwell Study" width="95%"></td>
+                    <td><img src="media/bair_hall.jpg" alt="Wave" width="45%"></td>
+                    <td><img src="media/bair_wall.jpg" alt="Blackwell Study" width="45%"></td>
                     <td><img src="media/bair_hall_mosaic.jpg" alt="Blackwell Study" width="95%"></td>
                 </tr>
-                <tr></tr>
-                    <td><img src="media/ihouse_chandelier.jpg" alt="Wave" width="95%"></td>
-                    <td><img src="media/ihouse_roof.jpg" alt="Blackwell Study" width="95%"></td>
+                <tr>
+                    <td><img src="media/ihouse_chandelier.jpg" alt="Wave" width="45%"></td>
+                    <td><img src="media/ihouse_roof.jpg" alt="Blackwell Study" width="45%"></td>
                     <td><img src="media/ihouse_mosaic.jpg" alt="Blackwell Study" width="95%"></td>
                 </tr>
             </table>
@@ -276,6 +301,132 @@
 
         </div>
 
+
+        <div class="section">
+            <h1>Project 4B: Feature Matching for Autostitching</h1>
+        </div>
+
+        <div class="section">
+            <h2>Part 1: Harris Corners</h2>
+
+            <p>I used the provided starter code to detect the Harris corners for images.
+
+            I played around with the sigma and min_dist params and decided to use sigma=1, min_dist=3
+
+            to get reasonable corners. This is what they looked like:
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="media/blackwell_straight_med_harris_corners.jpg" alt="Wave" width="95%"></td>
+                    <td><img src="media/blackwell_study_med_harris_corners.jpg" alt="Blackwell Study" width="95%"></td>
+                    <td><img src="media/bair_hall_harris_corners.jpg" alt="Wave" width="95%"></td>
+                    <td><img src="media/bair_wall_harris_corners.jpg" alt="Blackwell Study" width="95%"></td>
+                    <td><img src="media/ihouse_chandelier_harris_corners.jpg" alt="Wave" width="95%"></td>
+                    <td><img src="media/ihouse_roof_harris_corners.jpg" alt="Blackwell Study" width="95%"></td>
+                </tr>
+            </table>
+            
+
+            <p>
+                Of course, this was too many corners, and they were poorly distributed, so I implemented adaptive non-maximal spuppression, where I calculated the maximum supression radius
+                for each corner, and then added more and more of the strongest corners until I had enough. I chose to stop at 500 of the brightest, best-spaced corners, just like in 
+                <a href="https://inst.eecs.berkeley.edu/~cs180/fa24/hw/proj4/Papers/MOPS.pdf">"Multi-Image Matching using Multi-Scale Oriented Patches” by Brown et al.</a>
+                After filtering, I was left with:
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="media/blackwell_straight_med_harris_corners_kept.jpg" alt="Wave" width="95%"></td>
+                    <td><img src="media/blackwell_study_med_harris_corners_kept.jpg" alt="Blackwell Study" width="95%"></td>
+                    <td><img src="media/bair_hall_harris_corners_kept.jpg" alt="Wave" width="95%"></td>
+                    <td><img src="media/bair_wall_harris_corners_kept.jpg" alt="Blackwell Study" width="95%"></td>
+                    <td><img src="media/ihouse_chandelier_harris_corners_kept.jpg" alt="Wave" width="95%"></td>
+                    <td><img src="media/ihouse_roof_harris_corners_kept.jpg" alt="Blackwell Study" width="95%"></td>
+                </tr>
+            </table>
+
+        </div>
+
+        <div class="section">
+            <h2>Part 2: Feature Descriptors</h2>
+
+            <p> In order to use these corners, I computed feature descriptors around each one by sampling 8 pixels, spaced out by 5 pixels from the center of the point. 
+                These features were then flattened and normalized to have a mean of 0 and a standard deviation of 1 for more consistent distance computation.
+                Here are some examples of features and their matched features (all will be explained in the next section) for all 3 of the mosaics I created.
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="media/blackwell_features.jpg" alt="Wave" width="95%"></td>
+                    <td><img src="media/bair_features.jpg" alt="Blackwell Study" width="95%"></td>
+                    <td><img src="media/ihouse_features.jpg" alt="Wave" width="95%"></td>    
+                </tr>   
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>Part 3: Feature Matching</h2>
+
+            <p> After the corners had their features described, I matched up corresponding ones. In order to do this, I used Lowe thresholding - if a combination of features had a suspiciously similar second nearest neighbor, that means the 
+                first nearest neighbor also likely isn't that compelling of a match, and can be omitted. Here are the corners I ended up with by matching the most similar features, and discarding features with conflicting information. 
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="media/blackwell_straight_med_auto_correspondances.jpg" alt="Wave" width="95%"></td>
+                    <td><img src="media/blackwell_study_med_auto_correspondances.jpg" alt="Blackwell Study" width="95%"></td>
+                </tr>
+                <tr>
+                    <td><img src="media/bair_hall_auto_correspondances.jpg" alt="Wave" width="95%"></td>
+                    <td><img src="media/bair_wall_auto_correspondances.jpg" alt="Blackwell Study" width="95%"></td>
+                </tr>
+                <tr>
+                    <td><img src="media/ihouse_chandelier_auto_correspondances.jpg" alt="Wave" width="95%"></td>
+                    <td><img src="media/ihouse_roof_auto_correspondances.jpg" alt="Blackwell Study" width="95%"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>Part 4: RANSAC</h2>
+
+            <p> Now that I had a reasonable number of matching points, I implemented RANSAC to compute a homography. 
+
+                In order to implement RANSAC, I looped through 1000 combinations of 4 separate correspondances, and for each of those, I computed the exact
+                homography matrix. Then, I figured out how many of the correspondances worked well under that homography matrix by assessing how many points were properly 
+                transformed to within a distance of 50 from their desired output value. 
+
+                The combination of 4 points that yielded the greatest number of points with a successful mapping was deemed the winner. All the inliers for that homography
+                were used to calculate the final, best homography for the mosaic.
+
+                In this way, images were automatically stitched together. 
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Part 5: Mosaic Comparison</h2>
+
+            <p> Here are the generated mosaics. The original one which was computed
+                by my manual point mapping is on the left, and the one which was automatically stitched together is on the right. 
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="media/blackwell_mosaic.jpg" alt="Wave" width="95%"></td>
+                    <td><img src="media/blackwell_straight_med_auto_mosaic.jpg" alt="Blackwell Study" width="95%"></td>
+                </tr>
+                <tr>
+                    <td><img src="media/bair_hall_mosaic.jpg" alt="Wave" width="95%"></td>
+                    <td><img src="media/bair_wall_auto_mosaic.jpg" alt="Blackwell Study" width="95%"></td>
+                </tr>
+                <tr>
+                    <td><img src="media/ihouse_mosaic.jpg" alt="Wave" width="95%"></td>
+                    <td><img src="media/ihouse_auto_mosaic.jpg" alt="Blackwell Study" width="95%"></td>
+                </tr>
+            </table>
+
+        </div>
 
 
 </body>
