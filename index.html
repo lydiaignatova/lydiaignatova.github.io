@@ -1,17 +1,403 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
+
 <head>
-    <title>My Portfolio</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-    </style>
+  <!-- Title -->
+  <title>Lydia Ignatova - UC Berkeley</title>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=1000">
+
+    <!-- Image in Tab -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+  
+
+  <!-- Isotope JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+  <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+
+  <!-- Custom Style -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+    rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+  </style>
+
+  
 </head>
-<body>
-    <h1>Welcome to My CS180 Portfolio!</h1>
-    <!-- Link to the CS 180 Project page -->
-    <a href="./cs180/index.html">Go to CS 180 Projects</a>
+
+<body id="body">
+
+  <div id="main">
+    <div id="intro">
+      <div id="intro-text">
+        <h1>Lydia Ignatova</h1>
+        <p>
+            &#x1F6A7; This website is still under construction!  &#x1F6A7;
+
+        <br><br>
+			Hello! I'm a 4th year undergraduate student in EECS at UC Berkeley.
+
+            I work on machine learning and robotics for navigation, 
+            hoping to achieve human-like capabilities and eventually improve the transportation system. 
+		<br><br>
+
+            Currently, I do research at Berkeley's <a href="https://rail.eecs.berkeley.edu/">Robotic AI & Learning Lab</a> on reinforcement learning and robotics 
+            and teach lab sections for <a href="https://eecs16a.org/">EECS 16A: Designing Information Devices and Systems I</a>. 
+
+        <br> <br>
+		<a href="https://www.linkedin.com/in/lydia-ignatova/">LinkedIn</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="https://github.com/lydiaignatova">GitHub</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <br><br>
+        lydiaignatova &#x1F436; berkeley &#x1F310; edu
+        <br><br>
+        </p>
+      </div>
+      <div id="intro-image">
+        <img src="media/selfie.jpg">
+      </div>
+    </div>
+
+	<div id="filters" class="button-group">
+        <!-- <button class="button" data-filter="*">Show All</button> -->
+        <button class="button" data-filter=".highlight">Highlights</button>
+        <button class="button is-checked" data-filter=".publication">Research</button>
+        <button class="button" data-filter=".teaching">Teaching</button>
+        <!-- <button class="button" data-filter=".misc">Misc</button> -->
+        <button class="button" data-filter=".honors">Honors</button>
+        <button class="button" data-filter=".recs">Recs</button>
+      </div>
+
+      <div class="grid">
+
+        <!-- Highlights -->
+        <div class="list-item highlight description" data-category="highlight">
+        </div>
+
+        <!-- Preview Videos
+        <div class="list-item highlight previews" data-category="highlight">
+          <a href="https://sites.google.com/berkeley.edu/walk-in-the-park"><img src="media/wip.gif" alt="" width="300px" /></a>
+		  <a href="https://sites.google.com/berkeley.edu/twirl"><img src="media/twirl.gif" alt="" width="300px" /></a>
+        </div> -->
+
+        <!-- Truncated Set of Highlights (Shown by Default) -->
+        <div id="main-highlights">
+
+        <div class="list-item highlight" data-category="highlight">
+            <b>Nov 2024: First Conference!</b> 
+                <a href="https://kylesta.ch/lifelong-nav-rl/">LiReN</a> was accepted to 
+                the <a href="https://www.corl.org/">Conference on Robot Learning</a>, and I get to visit Munich, Germany.
+        </div>
+
+        </div>
+
+
+      <!-- Publications -->
+
+      <div class="list-item publication" data-category="publication">
+        <a href="https://kylesta.ch/lifelong-nav-rl/" class="thumbnail">
+          <video playsinline="" muted="" autoplay="" loop="" width="180px">
+            <source src="media/liren.mp4" type="video/mp4">
+          </video>
+        </a>
+        <div class="project-description">
+          <h3><a href="https://kylesta.ch/lifelong-nav-rl/">LiReN: Lifelong Autonomous Fine-Tuning of Navigation
+            Foundation Models in the Wild</a>
+          </h3>
+          <p>
+            Kyle Stachowicz<sup>*</sup>, Lydia Ignatova<sup>*</sup>, Sergey Levine<br>
+            <i>CoRL 2024</i><br>
+			<a href="https://kylesta.ch/lifelong-nav-rl/">Webpage</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+			<a href="https://openreview.net/pdf?id=vBj5oC60Lk">PDF</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Teaching -->
+	  <div class="list-item teaching" data-category="misc">
+        <p class="date">Fall <br> 2024</p>
+        <p class="textlong">Lab TA 
+              for <a href="https://eecs16a.org/">EECS 16A: Designing Information Devices and Systems I</a> 
+              taught by <a href="https://www2.eecs.berkeley.edu/Faculty/Homepages/ayazifar.html">Babak Ayazifar</a>
+              and <a href="https://www2.eecs.berkeley.edu/Faculty/Homepages/jptennant.html">JP Tennant</a> (first semester the class was taught without circuits!)
+            </p>
+      </div>
+
+      <div class="list-item teaching" data-category="misc">
+        <p class="date">Spring <br> 2024</p>
+        <p class="textlong">TA and Reader Leader 
+              for <a href="https://eecs189.org/">CS 189: Introduction to Machine Learning</a> 
+              taught by <a href="https://people.eecs.berkeley.edu/~jrs/">Jonathan Shewchuk</a>
+            </p>
+        </div>
+
+      <div class="list-item teaching" data-category="misc">
+        <p class="date">Fall <br> 2023</p>
+        <p class="textlong">Lab TA 
+              for <a href="https://eecs16a.org/">EECS 16A: Designing Information Devices and Systems I</a> 
+              taught by <a href="http://people.eecs.berkeley.edu/~gireeja/">Prof. Ranade</a>
+            <br class="break15"> Department Tutor 
+            for the <a href="https://engineering.berkeley.edu/students/academic-support/">Center for Access to Engineering Excellence (CAEE)</a> 
+        </p>
+      </div>
+      
+
+      <div class="list-item teaching" data-category="misc">
+        <p class="date">Spring <br> 2023</p>
+        <p class="textlong">Lab Assistant 
+              for <a href="https://eecs16a.org/">EECS 16A: Designing Information Devices and Systems I</a> 
+              taught by <a href="https://www2.eecs.berkeley.edu/Faculty/Homepages/rikky.html">Rikky Muller </a>
+              and <a href="https://www2.eecs.berkeley.edu/Faculty/Homepages/waller.html">Laura Waller</a>
+            <br class="break15"> Department Tutor 
+            for the <a href="https://engineering.berkeley.edu/students/academic-support/">Center for Access to Engineering Excellence (CAEE)</a> 
+        </p>
+      </div>
+
+      <div class="list-item teaching" data-category="misc">
+        <p class="date">Fall <br> 2022</p>
+        <p class="textlong">Lab Assistant 
+              for <a href="https://eecs16a.org/">EECS 16A: Designing Information Devices and Systems I</a> 
+              taught by <a href="https://www2.eecs.berkeley.edu/Faculty/Homepages/acarias.html">Prof. Arias </a>
+              and <a href="https://www2.eecs.berkeley.edu/Faculty/Homepages/mlustig.html">Miki Lustig</a>
+        </p>
+      </div>
+
+
+      
+
+	  <div class="list-item teaching" data-category="misc">
+		  <p class="date">Spring <br> 2022</p>
+          <p class="textlong">Tutor 
+                for <a href="https://www.law.berkeley.edu/php-programs/courses/coursePage.php?cID=31911">LAW 276.34: Computer Programming for Lawyers</a> 
+                taught by <a href="https://www.law.berkeley.edu/our-faculty/faculty-profiles/chris-hoofnagle/#tab_profile">Chris Hoofnagle</a>
+            </p>
+	  </div>
+
+
+	  <div class="list-item teaching" data-category="misc">
+        <p class="date">2019-<br>2021</p>
+        <p class="textlong">Tutor 
+              at the <a href="https://www.mathschool.com/">Russian School of Math</a> 
+        </p>
+      </div>
+
+      <!-- <div class="list-item teaching" data-category="misc">
+        <p class="date">2017-<br>Now</p>
+        <p class="textlong">Private Tutoring 
+        </p>
+      </div> -->
+      
+
+      <!-- Miscellaneous -->
+      <div class="list-item misc" data-category="misc">
+        <p class="date">Fall <br>2024</p>
+        <p class="textlong">UC Berkeley Golden Bear Orientation Leader for transfers (go group 626!)</a> 
+        </p>
+      </div>
+
+
+      <div class="list-item misc" data-category="misc">
+        <p class="date">Fall<br>2023</p>
+        <p class="textlong">Internal Vice President of <a href="https://ml.studentorg.berkeley.edu/">ML@B</a> 
+        </p>
+      </div>
+
+      <div class="list-item misc" data-category="misc">
+        <p class="date">Fall <br>2022</p>
+        <p class="textlong">UC Berkeley Golden Bear Orientation Leader for freshmen (go group 320!)</a> 
+        </p>
+      </div>
+
+
+
+
+      <!-- Honors -->
+
+      <div class="list-item honors" data-category="misc">
+        <p class="date">2024</p>
+        <p class="textlong"> 
+            EECS Chair's Special Award for my contributions as an <a href="https://www.dailycal.org/news/campus/administration/uc-berkeley-community-condemns-eecs-professor-s-misogynistic-discussion-post/article_f932e508-e7c7-11ee-be9d-a3367a501c0c.html">inclusive TA</a>
+        </p>
+      </div>
+
+      <div class="list-item honors" data-category="misc">
+        <p class="date">2021</p>
+        <p class="textlong"> 
+            UC Berkeley Regents' and Chancellor's Scholarship
+                        
+            <br class="break15"> 
+
+            Orange County Mensa Foundation STEM Scholarship for Women
+        </p>
+      </div>
+
+
+      <div class="list-item honors" data-category="misc">
+        <p class="date">2020</p>
+        <p class="textlong"> 
+            Irvine Rotary Youth Community Service Award
+            
+            <br class="break15"> 
+
+            Presidential Volunteer Service Award
+        </p>
+      </div>
+
+
+      <div class="list-item honors" data-category="misc">
+        <p class="date">2019</p>
+        <p class="textlong"> 
+            Presidential Volunteer Service Award
+        </p>
+      </div>
+
+
+      <!-- Recs -->
+
+      <div class="list-item recs" data-category="misc">
+        <p class="date">Listen</p>
+        <p class="textlong"> 
+            Fav podcasts at the moment: 
+                <a href="https://freakonomics.com/series/freakonomics-radio/">Freakonomics Radio</a>, 
+                <a href="https://freakonomics.com/series/nsq/">No Stupid Questions</a>, 
+                <a href="https://hiddenbrain.org/">Hidden Brain</a>,
+                <a href="https://www.npr.org/programs/wait-wait-dont-tell-me/">Wait Wait ... Don't Tell Me!</a>.
+
+        </p>
+      </div>
+
+      <!-- <div class="list-item recs" data-category="misc">
+        <p class="date">Read</p>
+        <p class="textlong"> 
+            
+            <br class="break15"> 
+
+        </p>
+      </div> -->
+
+      <!-- <div class="list-item recs" data-category="misc">
+        <p class="date">Learn</p>
+        <p class="textlong"> 
+            Fav self help books:UC Berkeley Regents' and Chancellor's Scholarship
+                        
+            <br class="break15"> 
+
+            Orange County Mensa Foundation STEM Scholarship for Women
+        </p>
+      </div> -->
+
+      <!-- <div class="list-item recs" data-category="misc">
+        <p class="date">Enjoy</p>
+        <p class="textlong"> 
+            Free crochet patterns, especially from 
+                        
+            <br class="break15"> 
+
+            Orange County Mensa Foundation STEM Scholarship for Women
+        </p>
+      </div> -->
+
+
+
+	  
+
+      <!-- Footer -->
+      <div id="footer">
+        Website template by <a href="https://andyzeng.github.io/">Andy Zeng</a>. I stole it from <a href="https://lauramsmith.github.io/">Laura Smith</a>.
+      </div>
+
+      <script>
+
+        // Isotope grid.
+        var $grid = $('.grid').isotope({
+          itemSelector: '.list-item',
+          layoutMode: 'fitRows',
+          transitionDuration: 0,
+          stagger: 10,
+          initLayout: false,
+          getSortData: {
+            name: '.name',
+            symbol: '.symbol',
+            number: '.number parseInt',
+            category: '[data-category]',
+            weight: function (itemElem) {
+              var weight = $(itemElem).find('.weight').text();
+              return parseFloat(weight.replace(/[\(\)]/g, ''));
+            }
+          }
+        });
+
+        // Bind filter button click.
+        $('#filters').on('click', 'button', function () {
+          var filterValue = $(this).attr('data-filter');
+          localStorage.setItem('filterValue', filterValue);
+          $grid.isotope({ filter: filterValue });
+        });
+
+        // Change is-checked class on buttons.
+        $('.button-group').each(function (i, buttonGroup) {
+          var $buttonGroup = $(buttonGroup);
+          $buttonGroup.on('click', 'button', function () {
+            $buttonGroup.find('.is-checked').removeClass('is-checked');
+            $(this).addClass('is-checked');
+          });
+        });
+
+        function update_isotope() {
+          // Retrieve cached button click.
+          var defaultFilterValue = localStorage.getItem('filterValue');
+          if (defaultFilterValue == null) {
+            defaultFilterValue = ".highlight"
+          }
+          $grid.isotope({ filter: defaultFilterValue });
+          var buttons = document.getElementsByClassName("button");
+          for (var currButton of buttons) {
+            if (currButton.getAttribute('data-filter') == defaultFilterValue) {
+              currButton.classList.add('is-checked');
+            } else {
+              currButton.classList.remove('is-checked');
+            }
+          }
+        }
+
+        function toggle_bio() {
+          var x = document.getElementById("more-bio");
+          if (x.style.display === "none") {
+            x.style.display = "block";
+          } else {
+            x.style.display = "none";
+          }
+        }
+
+        function toggle_highlights() {
+          var x = document.getElementById("main-highlights");
+          var y = document.getElementById("more-highlights");
+          var b = document.getElementById("toggle_highlights_button")
+          if (y.style.display === "none") {
+            x.style.display = "none";
+            y.style.display = "block";
+            b.innerHTML = "Show less"
+            update_isotope();
+          } else {
+            x.style.display = "block";
+            y.style.display = "none";
+            b.innerHTML = "Show more"
+            update_isotope();
+          }
+        }
+
+        update_isotope();
+
+      </script>
 </body>
+
 </html>
