@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 5</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+</head>
+<body>
+    <div class="container">
+        <!-- Introduction Paragraph -->
+        <div class="section">
+            <h1>CS 180 Project 5: Fun with Diffusion Models</h1>
+            <p>In this project, I had fun with diffusion models! 
+                In part A, I worked with an existing diffiusion model to generate some cool images. 
+                In part B, I implemented a diffusion model using PyTorch.</p>
+        </div>
+
+        <div class="section">
+            <h1>Part A: The Power of Diffusion Models!</h1>
+        </div>
+
+
+        <div class="section">
+            <h2>Part 0: Setup</h2>
+
+            <p> 
+                First, I got familiar with using the <href a="https://huggingface.co/DeepFloyd/IF-I-XL-v1.0">DeepFloyd IF diffusion model.</href>
+                I used <b>random seed 240</b> throughout this project for generation, reseeding regularly to ensure reproducibility.
+                I showed that using a greater number of inference steps leads to a higher quality, more detailed image output, as shown below.
+
+                Generally, the outputs matched the text prompts sufficiently well, as long as I did at least O(10) inference steps. 
+            </p>
+
+            <p> num_inference_steps = 2 </p>
+
+            <table>
+                <tr>
+                    <td><img src="media/5a/0.0.2step.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <p> num_inference_steps = 20 </p>
+
+            <table>
+                <tr>
+                    <td><img src="media/5a/0.0.20step.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+            
+
+            <p> num_inference_steps = 200 </p>
+            <table>
+                <tr>
+                    <td><img src="media/5a/0.0.200step.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+
+            <p> num_inference_steps = 1000 </p>
+            <table>
+                <tr>
+                    <td><img src="media/5a/0.0.1000steps.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+        </div>
+
+        <div class="section">
+            <h2>Part 1: Sampling Loops</h2>
+
+            <p> 
+                A diffusion model tries to predict the noise in an image,
+                which can then be used to remove the noise or generate a less noisy version of the image.
+            </p>
+
+            <h3>Part 1.1: Forward Process - Noise Addition</h3>
+
+            <p>
+                We add the appropriate amount of noise for timestep T by sampling noise from a Gaussian and scaling the image. 
+                The larger that our timestep t is, the greater the amount of noise. 
+
+                For this implementation, we have T = 1000, so we can have timesteps up to 999. 
+
+                Below, you can see the test image at the noise levels 250, 500, and 750 for a picture of the campanile. 
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="media/5a/0.1.1.noisy_imgs.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <h3>Part 1.2: Classical Denoising</h3>
+
+            <p>
+               The classical method we test for denoising is a Gaussian blur filter. 
+               As you can see below, this does poorly.
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="media/5a/0.1.2.gaussian_blur.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <h3>Part 1.3: One-Step Denoising</h3>
+
+            <p>
+               Seeing that classical approaches let us down, we try denoising the image by estimating the noise using the UNet, 
+               passing it through stage_1.unet. This works better, as shown below.
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="media/5a/0.1.3.one_step.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <h3>Part 1.4: Iterative Denoising</h3>
+
+            <p>
+               Instead of just denoising in one step, we realize it would work better to iteratively denoise, taking steps of size 30 backwards from our initial 
+               noise level down to 0, which would be an estimate of the original image. 
+            </p>
+
+            <p>
+                As you can see, the noisy image gradually becomes less noisy. Each step has a stride of 30, and I visualize every 5th one.
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="media/5a/0.1.4.noisy0.jpg" alt="BAIR 1" width="95%"></td>
+                    <td><img src="media/5a/0.1.4.noisy10.jpg" alt="BAIR 1" width="95%"></td>
+                    <td><img src="media/5a/0.1.4.noisy15.jpg" alt="BAIR 1" width="95%"></td>
+                    <td><img src="media/5a/0.1.4.noisy20.jpg" alt="BAIR 1" width="95%"></td>
+                    <td><img src="media/5a/0.1.4.noisy25.jpg" alt="BAIR 1" width="95%"></td>
+                    <td><img src="media/5a/0.1.4.noisy30.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+
+            <p>
+                Overall, the predicted clean image using iterative denoising looks much better than the one computed in one step.
+                However, it also depends heavily on the seed, as you can see below.
+            </p>
+            <p>Seed = 240</p>
+            <table>
+                <tr>
+                    <td><img src="./media/5a/0.1.4.iterativelydenoised240.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+            <p>Seed = 241</p>
+            <table>
+                <tr>
+                    <td><img src="./media/5a/0.1.4.iterativelydenoised241.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+            <p>Seed = 480</p>
+            <table>
+                <tr>
+                    <td><img src="./media/5a/0.1.4.iterativelydenoised480.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+            <p>Seed = 720</p>
+            <table>
+                <tr>
+                    <td><img src="./media/5a/0.1.4.iterativelydenoised720.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <h3>Part 1.5: Diffusion Model Sampling</h3>
+
+            <p>
+                We can generate images from scratch by starting from pure noise. Here are 5 examples we get of "a high quality photo".
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="./media/5a/0.1.5.samples.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <h3>Part 1.6: Classifier-Free Guidance (CFG)</h3>
+
+            <p>
+                The images from scratch would look better if we incorporate both an unconditional noise estimate and a conditional noise estimate. 
+                When we run CFG with a scale of &gamma; = 7, these are 5 sample images we get, which are much higher quality. 
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="./media/5a/0.1.6.samples.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <h3>Part 1.7: Image-to-Image Translation</h3>
+
+            <p>
+                Now, we generate new images by taking the original test image, adding some noise, and then iteratively denoising it. 
+                Here are the edits of the test image, with noise levels [1, 3, 5, 7, 10, 20] and text prompt "a high quality photo". 
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="./media/5a/0.1.7.campanile.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <p>
+               I also ran this on a "Danger" sign. 
+            </p>
+            <table>
+                <tr>
+                    <td><img src="./media/5a/0.1.7.danger_out.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <p>
+                I also ran this on some flowers. 
+            </p>
+            <table>
+                <tr>
+                    <td><img src="./media/5a/0.1.7.flower_out.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <h3>Part 1.7.1: Editing Images </h3>
+
+            <p>
+               Now, I ran this algorithm on non-realistic images and saw if they would become more realistic when projected onto the natural image manifold. 
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="./media/5a/0.1.7.1.avocado.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+                <tr>
+                    <td><img src="./media/5a/0.1.7.1.orange_cat.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+                <tr>
+                    <td><img src="./media/5a/0.1.7.1.rainbow_me.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+                <tr>
+                    <td><img src="./media/5a/0.1.7.1.dino_me.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <h3>Part 1.7.2: Inpainting</h3>
+
+            <p>
+               Now, I applied the same procedure to only a masked part of the image to essentially edit a portion of the picture.
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="./media/5a/0.1.7.2.campanile_240.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+                <tr>
+                    <td><img src="./media/5a/0.1.7.2.flowers_inpainted.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+                <tr>
+                    <td><img src="./media/5a/0.1.7.2.milena_inpainted.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            It turned out pretty cool! 
+
+            <h3>Part 1.7.3: Text-Conditional Image-to-image Translation</h3>
+
+            <p>
+               Now, I did the same thing as SDEdit, but changed the prompt from "a high quality photo" to "an oil painting of people around a campfire" to guide the projection.
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="./media/5a/0.1.7.3.campfire_campanile.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+                <tr>
+                    <td><img src="./media/5a/0.1.7.3.campfire_danger.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+                <tr>
+                    <td><img src="./media/5a/0.1.7.3.campfire_flowers.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <h3>Part 1.8: Visual Anagrams </h3>
+
+            <p>
+               To generate visual anagrams, where the image looks like one thing in one direction and another thing when it's rotated 180 degrees,
+               I denoised it twice at each step, once for the desired prompt, and then the flipped image with the second prompt.
+               Then, at each step, I combined together the estimated noise by averaging it.
+               I got some cool images! 
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="./media/5a/0.1.8.old_man.jpg" alt="BAIR 1" width="50%"></td>
+                </tr>
+                <tr>
+                    <td><img src="./media/5a/0.1.8.dog_barista.jpg" alt="BAIR 1" width="50%"></td>
+                </tr>
+                <tr>
+                    <td><img src="./media/5a/0.1.8.man_hat_rocket.jpg" alt="BAIR 1" width="50%"></td>
+                </tr>
+            </table>
+
+            <h3>Part 1.9: Hybrid Images </h3>
+
+            <p>
+               To generate hybrid images, where it looks like one thing close up and another from afar, I denoised the image using 2 prompts, and at each denoising step, combined together the estimated noises by passing one of them through a highpass filter and the other through a lowpass filter. 
+               I used a gaussian blur with a kernel size of 33 and sigma set to 2. 
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="./media/5a/0.1.9.waterfall_skull.jpg" alt="BAIR 1" width="50%"></td>
+                </tr>
+                <tr>
+                    <td><img src="./media/5a/0.1.9.dog_fire.jpg" alt="BAIR 1" width="50%"></td>
+                </tr>
+                <tr>
+                    <td><img src="./media/5a/0.1.9.man_coast.jpg" alt="BAIR 1" width="50%"></td>
+                </tr>
+            </table>
+
+        </div>
+
+        <div class="section">
+            <h1>Part B: Diffusion Models from Scratch!</h1>
+        </div>
+
+        <div class="section">
+            <h2>Part 1: Training a Single-Step Denoising UNet</h2>
+        
+            <p>
+                First, we implement a simple one-step denoiser, which maps a noisy image to a clean image.
+                We implement this in pytorch, using a UNet architecture.
+            </p>
+
+            <h3>Part 1.2: Training a Denoiser</h3>
+            
+            <p>
+                In order to train a denoiser, we need to have noisy images! Here are visualizations of different levels of noise.
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="./media/5b/1.2 noise.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <h3>Part 1.2.1: Training</h3>
+            
+            <p>
+                We train a UNet denoiser with hidden dimension 128 for &sigma; = 0.5 on the MNIST dataset using MSE loss and an Adam optimizer with a learning rate of 1e-4.
+                Here is the training curve over 5 training epochs, visualized both on the linear scale and log scale.
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="./media/5b/1.2 training curve.jpg" alt="BAIR 1" width="95%"></td>
+                    <td><img src="./media/5b/1.2 training curve log.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <p> 
+                The denoising works reasonably well! Here are the results after just the first epoch:
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="./media/5b/1.2.1 epoch 1.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <p> 
+                By the completion of the fifth epoch, the results are quite good:
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="./media/5b/1.2.1 epoch 2.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <p> 
+                The denoiser was trained with &sigma; = 0.5, but we are able to apply it to 
+                noisier and less noisy images and still get some denoising. 
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="./media/5b/1.2.2 ood.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>Part 2: Training a Diffusion Model</h2>
+
+            <p>
+                Now, we want to train a real diffusion model, which predicts the noise in an image instead of completing one-step denoising.
+               
+            </p>
+
+            <h3>Part 2.1: Adding Time Conditioning to UNet</h3>
+
+            <p> 
+                We inject the scalar t representing the level of noise we are denoising from into the UNet model architecture with a fully connected block. 
+                When we want to sample an image, we start with noise, and iteratively decrease the "noise level" until we have a brand new clean image.
+                Here is the training loss curve.
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="./media/5b/2.2 training curve .jpg" alt="BAIR 1" width="95%"></td>
+                    <td><img src="./media/5b/2.2 training curve log.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <p> 
+                The denoising works reasonably well! Here are the results after five epochs:
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="./media/5b/2.2 epoch 5 visualization.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <p> 
+                Here are the results of the fully trained model. 
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="./media/5b/2.2 epoch 19.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+
+
+            
+
+            <h3>Part 2.4: Adding Class-Conditioning to UNet</h3>
+
+            <p> 
+                We train another version of the model where we can choose which digit we want to generate, instead of having no control over which class is created.
+                Here is the training loss curve.
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="./media/5b/2.4 training curve.jpg" alt="BAIR 1" width="95%"></td>
+                    <td><img src="./media/5b/2.4 training curve log.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <p> 
+                The denoising works reasonably well! Here are the results after five epochs:
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="./media/5b/2.4 epoch 5.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <p> 
+                Here are the results of the fully trained model. 
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="./media/5b/2.4 epoch 19.jpg" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <h3>Bells & Whistles: GIFs</h3>
+
+            <p> Here is a gif of the sampling process for the time-conditioned model after 5 epochs of training.</p>
+            <table>
+                <tr>
+                    <td><img src="./media/5b/2.2 epoch 4.gif" alt="BAIR 1" width="105%"></td>
+                </tr>
+            </table>
+            <p></p>
+            <p> Here is a gif of the sampling process for the time-conditioned model after 20 epochs of training.</p>
+            <table>
+                <tr>
+                    <td><img src="./media/5b/2.2 epoch 19.gif" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+            <p></p>
+
+            <p>Here is a gif of the sampling process for the time and class conditioned model after 5 epochs of training.</p>
+
+            <table>
+                <tr>
+                    <td><img src="./media/5b/2.4 epoch 4.gif" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+            <p>Here is a gif of the sampling process for the time and class conditioned model after 20 epochs of training.</p>
+
+            <table>
+                <tr>
+                    <td><img src="./media/5b/2.4 epoch 19.gif" alt="BAIR 1" width="95%"></td>
+                </tr>
+            </table>
+
+        </div>
+
+</body>
+</html>
