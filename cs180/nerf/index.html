@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeRF</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+</head>
+<body>
+    <div class="container">
+        <!-- Introduction Paragraph -->
+        <div class="section">
+            <h2>Final Project: NeRF</h2>
+            <p>In this project, we worked with Neural Radiance Fields!</p>
+        </div>
+
+        <div class="section">
+            <h2>Part 1: Fit a Neural Field to a 2D Image</h2>
+            <p>In this part, I created a multilayer perceptron network with sinusoidal 
+                positional encoding to predict the three dimensional RGB pixel colors given 
+                the two dimensional pixel coordinate UV. I used the suggested architecture from the project spec, 
+                which is visualized below. The sigmoid at the end makes sure that the output is between 0 and 1, which 
+                is the valid range for the colors. 
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="media/est/architecture.jpg" alt="missing" width="95%"></td>
+                </tr>
+            </table>
+
+            <p>
+                I trained this model by using mean squared error as the loss metric, comparing the ground
+                truth image color to the predicted color. Besides that, I visualized the peak signal-to-noise ratio (PSNR). 
+            </p>
+
+            <p> 
+                I started with the following hyperparameters: </p>
+                <p>&nbsp;&nbsp;&nbsp;-Number of iterations to run for training: 2000</p>
+                <p>&nbsp;&nbsp;&nbsp;-N (number of pixels to sample at each training iteration): 10k</p>
+                <p>&nbsp;&nbsp;&nbsp;-Adam optimizer learning rate: 1e-2</p>
+                <p>&nbsp;&nbsp;&nbsp;-L (max frequency for the positional encoding): 10</p>
+                <br>
+            <p>
+                The number of channels and the channel size are visible in the diagram above.
+                
+                With that setup, I got the following results. The rightmost image is the original.
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="media/est/L10lr1e2/iter0.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L10lr1e2/iter400.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L10lr1e2/iter800.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L10lr1e2/iter1200.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L10lr1e2/iter1600.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L10lr1e2/iter2000.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/fox.jpg" alt="missing" width="65%"></td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <td><img src="media/est/L10lr1e2/mse.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L10lr1e2/psnr.jpg" alt="missing" width="95%"></td>
+                </tr>
+            </table>
+
+            <p>
+                Then, I wanted to see how changing L, which controls the maximum
+                frequency for the positional encoding, would affect the training process.
+            </p>
+
+            <p>
+                With a lower L = 5, I got the following results. I didn't notice too many visual differences, but the signal to noise ratio doesn't look as stable.
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="media/est/L5lr1e2/iter0.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L5lr1e2/iter400.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L5lr1e2/iter800.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L5lr1e2/iter1200.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L5lr1e2/iter1600.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L5lr1e2/iter2000.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/fox.jpg" alt="missing" width="65%"></td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <td><img src="media/est/L5lr1e2/mse.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L5lr1e2/psnr.jpg" alt="missing" width="95%"></td>
+                </tr>
+            </table>
+
+            <p>
+                With a higher L = 20, I got slightly smoother convergence for the PSNR, but visually nothing dramatic.
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="media/est/L20lr1e2/iter0.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L20lr1e2/iter400.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L20lr1e2/iter800.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L20lr1e2/iter1200.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L20lr1e2/iter1600.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L20lr1e2/iter2000.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/fox.jpg" alt="missing" width="65%"></td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <td><img src="media/est/L20lr1e2/mse.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L20lr1e2/psnr.jpg" alt="missing" width="95%"></td>
+                </tr>
+            </table>
+
+            <p>
+                Then, I wanted to see how the learning rate lr would affect the training process.
+            </p>
+
+            <p>
+                With a higher lr=1e-1, I got the following results. I noticed that the results got quite a bit worse (always black), and the model could not converge. 
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="media/est/L10lr1e1/iter0.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L10lr1e1/iter400.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L10lr1e1/iter800.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L10lr1e1/iter1200.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L10lr1e1/iter1600.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L10lr1e1/iter2000.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/fox.jpg" alt="missing" width="65%"></td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <td><img src="media/est/L10lr1e1/mse.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L10lr1e1/psnr.jpg" alt="missing" width="95%"></td>
+                </tr>
+            </table>
+
+            <p>
+                With a lower lr=1e-4, I got slower but smoother convergence. 
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="media/est/L10lr1e4/iter0.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L10lr1e4/iter400.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L10lr1e4/iter800.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L10lr1e4/iter1200.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L10lr1e4/iter1600.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L10lr1e4/iter2000.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/fox.jpg" alt="missing" width="65%"></td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <td><img src="media/est/L10lr1e4/mse.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/L10lr1e4/psnr.jpg" alt="missing" width="95%"></td>
+                </tr>
+            </table>
+
+
+            <p>
+                Overall, I noticed that changing L didn't drastically impact model results, while choosing an appropriate learning rate is crucial to success. 
+            </p>
+
+
+            <p>
+                Finally, I applied the method to another image with the original hyperparameters.
+                I got the following results.
+            </p>
+
+
+            <table>
+                <tr>
+                    <td><img src="media/est/bust/iter0.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/bust/iter400.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/bust/iter800.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/bust/iter1200.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/bust/iter1600.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/bust/iter2000.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/bust.jpg" alt="missing" width="20%"></td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <td><img src="media/est/bust/mse.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/est/bust/psnr.jpg" alt="missing" width="95%"></td>
+                </tr>
+            </table>
+
+        </div>
+
+        <div class="section">
+            <h2>Part 2: Fit a Neural Radiance Field from Multi-view Images</h2>
+
+
+            <p>
+                Next, I tried to create a neural radiance field by multi-view calibrated images.
+
+                I used the given lego dataset, which looks like this, when you visualize all the given camera 
+                information and images. We are given the camera-to-world transformation matrix for each camera. 
+                Based on this information, we want to do inverse rendering to effectively reconstruct the object depths.
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="media/nerf/lego_data.jpg" alt="missing" width="95%"></td>
+                </tr>
+            </table>
+
+
+            <p>
+                First, I had to implement a couple of helper functions.
+
+                I wrote functions to be able to transform a point from camera to the world space, convert a pixel coordinate back to the 
+                camera coordinate system, and compute the ray origin and ray direction for any pixel uv.
+
+                In order to transform a point from camera to the world space, I matrix multiplied the transformation matrix with the point.
+
+                In order to convert a pixel coordinate back to the camera coordinate system, I matrix multiplied the scaled inverse K matrix with the point.
+
+                Computing the ray origin was simple, since it was just a matrix multiplication between the inverse of the world to camera's rotation matrix
+                and the world to camera's translation vector. In order to compute the ray direction, I normalized the difference between the world coordinate and the origin.
+            </p>
+
+            <p>
+                Next, I created a dataloader to be able to sample random pixels from images, like I did in part 1. I precomputed the rays for each pixel location
+                for each camera to speed this up.
+                
+                I also wrote a method to be able to sample points along each ray in order to have samples living in 3D space. During training,
+                these points were not evenly spaced, but instead perturbed a bit. For training, I used 64 points on each ray.
+            </p>
+
+            <p>
+                Altogether, the scene was visualized something like this. Each of the images corresponds to a camera view.
+                Each line corresponds to a randomly sampled ray. Each dot corresponds to a sampled point in space. 
+            </p>
+
+            <div class="video-container">
+                <video width="640" height="360" controls>
+                  <source src="media/nerf/pointcloud.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+            </div>
+
+           
+
+
+            <p>
+                I followed along with the suggested architecture for creating a model to 
+                predict RGB and Density based on the 3D world coordinate and the 3D ray direction vector.
+            </p>
+
+            <table>
+                <tr>
+                    <td><img src="media/nerf/architecture.jpg" alt="missing" width="95%"></td>
+                </tr>
+            </table>
+
+            <p>
+                I trained this model by using mean squared error as the loss metric, comparing
+                the ground truth pixel value to the rendered color at each position. 
+                On top of that, I computed the peak signal-to-noise ratio (PSNR). 
+            </p>
+
+            <p> 
+                I used the following hyperparameters: </p>
+                <p>&nbsp;&nbsp;&nbsp;Gradient Steps: 3000</p>
+                <p>&nbsp;&nbsp;&nbsp;Batch Size: 10k</p>
+                <p>&nbsp;&nbsp;&nbsp;Adam optimizer learning rate: 5e-4</p>
+<br> <p>
+                With this setup, I got the following results. 
+            </p>
+
+
+            <table>
+                <tr>
+                    <td><img src="media/nerf/training/iter0.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/nerf/training/iter20.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/nerf/training/iter200.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/nerf/training/iter500.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/nerf/training/iter750.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/nerf/training/iter1000.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/nerf/training/iter2000.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/nerf/training/iter3000.jpg" alt="missing" width="95%"></td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <td><img src="media/nerf/mse.jpg" alt="missing" width="95%"></td>
+                    <td><img src="media/nerf/psnr.jpg" alt="missing" width="95%"></td>
+                </tr>
+            </table>
+
+
+            <p>
+                In the end, this is the video generated 
+                from visualizing the image from each test camera position, after 20 minutes of training.
+            </p>
+
+
+
+            <div class="video-container">
+                <video width="640" height="360" controls>
+                  <source src="media/nerf/7min.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+            </div>
+
+
+            <p>
+                After just 7 minutes of training, there were already reasonable results, as shown below.
+            </p>
+
+            <div class="video-container">
+                <video width="640" height="360" controls>
+                  <source src="media/nerf/good.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+            </div>
+
+            <h2>Bells and Whistles: Color Background</h2>
+
+            <p> 
+                In order to generate the object with a colored background, I needed to
+                update my volrend function. At the end of the generation,
+                I added in the color * the remaining amount of unaccounted transmittence (how much we should be able to see through the object, to the background)
+                so it would show up as the color instead of nothingness. 
+
+                Here it is, in pink and blue!
+            </p>
+
+            <table>
+                <tr>
+                    <td><video width="640" height="360" controls>
+                        <source src="media/nerf/pink.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video></td>
+                    <td><video width="640" height="360" controls>
+                        <source src="media/nerf/blue.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video></td>
+                </tr>
+            </table>
+
+
+
+
+        </div>
+
+
+
+    </div>
+
+</body>
+</html>
