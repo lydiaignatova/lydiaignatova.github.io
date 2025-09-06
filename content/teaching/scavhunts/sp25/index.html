@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scavenger Hunt</title>
+    <!-- Rename this file to index.html when using -->
+
+    <link rel="icon" href="media/favicon.ico" type="image/x-icon">
+
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .background-image {
+            width: 100%;
+            display: block;
+        }
+        
+        .clickable-area {
+            position: absolute;
+            cursor: pointer;
+            /* background-color: rgba(189, 33, 33, 0.486); /* Slightly visible for development */
+            /* border: 2px solid rgba(255, 255, 255, 0.3); /* Slightly visible for development */
+            border-radius: 50%;
+        }
+        
+        /* Remove these background and border properties when your site is ready */
+        
+        #clue1 { /* blue car in middle */
+            top: 30%;
+            left: 47%;
+            width: 70px;
+            height: 70px;
+        }
+
+        #clue2 { /* star swings center */ 
+            top: 45%;
+            left: 39%;
+            width: 70px;
+            height: 70px;
+        }
+
+        #clue3 { /* upper right hand corner ice cream */
+            top: 20%;
+            left: 90%;
+            width: 70px;
+            height: 70px;
+        }
+
+        #clue4 { /* bottom falling vase in center */ 
+            top: 92%;
+            left: 29%;
+            width: 40px;
+            height: 40px;
+        }
+
+        #clue5 { /* biking hello kitty with yellow bow left side  */ 
+            top: 39%;
+            left: 25%;
+            width: 70px;
+            height: 70px;
+        }
+
+        #clue6 { /* left side green gnome  */ 
+            top: 71%;
+            left: 5%;
+            width: 70px;
+            height: 70px;
+        }
+
+        #clue7 { /* bottom clock tower  */ 
+            top: 80%;
+            left: 64%;
+            width: 70px;
+            height: 70px;
+        }
+
+        #clue8 { /* giraffe in car */ 
+            top: 56%;
+            left: 75%;
+            width: 80px;
+            height: 90px;
+        }
+
+        #clue9 { /* sanrio title on house */ 
+            top: 69%;
+            left: 44%;
+            width: 90px;
+            height: 70px;
+        }
+
+        #clue10 { /* round boot window top left */ 
+            top: 27%;
+            left: 9%;
+            width: 40px;
+            height: 40px;
+        }
+
+        
+        /* Styles for the instructions */
+        .instructions {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="instructions">
+            <h1>Math Scavenger Hunt</h1>
+            <p>Find and click on the hidden clues in the image to solve math problems! Fill in your work in <a href="https://docs.google.com/forms/d/e/1FAIpQLScT8FHZe-3fknriMObKSnhh_osGzFBCWnNpDVsTWyl4R1Sd3g/viewform">this google form</a></p>
+        </div>
+        
+        <!-- Replace this with your actual background image -->
+        <img src="./media/retro-sanrio-town-wallpaper.jpg" alt="Scavenger Hunt Background" class="background-image">
+        
+        <!-- Clickable areas with links to separate problem pages -->
+        <a href="problem1.html">
+            <div id="clue1" class="clickable-area"></div>
+        </a>
+        <a href="problem2.html">
+            <div id="clue2" class="clickable-area"></div>
+        </a>
+        <a href="problem3.html">
+            <div id="clue3" class="clickable-area"></div>
+        </a>
+        <a href="problem4.html">
+            <div id="clue4" class="clickable-area"></div>
+        </a>
+        <a href="problem5.html">
+            <div id="clue5" class="clickable-area"></div>
+        </a>
+        <a href="problem6.html">
+            <div id="clue6" class="clickable-area"></div>
+        </a>
+        <a href="problem7.html">
+            <div id="clue7" class="clickable-area"></div>
+        </a>
+        <a href="problem8.html">
+            <div id="clue8" class="clickable-area"></div>
+        </a>
+        <a href="problem9.html">
+            <div id="clue9" class="clickable-area"></div>
+        </a>
+        <a href="problem10.html">
+            <div id="clue10" class="clickable-area"></div>
+        </a>
+        
+    </div>
+    
+</body>
+</html>

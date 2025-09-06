@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <!-- Title -->
+  <title>Random Projects</title>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=1000">
+
+    <!-- Image in Tab -->
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+
+  <!-- Isotope JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+  <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+
+  <!-- Custom Style -->
+  <link rel="stylesheet" href="../../style.css">
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+    rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+  </style>
+
+  
+</head>
+
+<body id="body">
+
+  <div id="main">
+    <div id="intro">
+      <div id="intro-text">
+        <h1>Random Projects</h1>
+
+        <p> A collection of miscellanous projects and links I want to keep track of & share!</p>
+        </div>
+    </div>
+
+	<div id="filters" class="button-group">
+        <button class="button" data-filter=".projects">Projects</button>
+        <button class="button is-checked" data-filter=".fun">Just For Fun</button>
+        <button class="button" data-filter=".design">Design</button>
+    </div>
+
+    <div class="grid">
+
+        <!-- Highlights -->
+        <div class="list-item highlight description" data-category="highlight">
+        </div>
+
+        <!-- Truncated Set of Highlights (Shown by Default) -->
+        <div id="main-highlights">
+
+        <div class="list-item highlight" data-category="highlight">
+            <b>Nov 2024: First Conference!</b> 
+                <a href="https://kylesta.ch/lifelong-nav-rl/">LiReN</a> was accepted to 
+                the <a href="https://www.corl.org/">Conference on Robot Learning</a>, and I get to visit Munich, Germany.
+        </div>
+
+    </div>
+
+
+      <!-- Projects -->
+      <div class="list-item projects" data-category="teaching">
+        <p class="textlong">
+            <a href = "./bulletjournal/bullet-journal-standalone.html">Bullet Journal Planner</a> vibe coded with <a href ="https://claude.ai/">Claude.</a>
+            </p>
+      </div>
+
+
+	  
+
+      <!-- Footer -->
+      <div id="footer">
+        Website template by <a href="https://andyzeng.github.io/">Andy Zeng</a>. I stole it from <a href="https://lauramsmith.github.io/">Laura Smith</a>.
+      </div>
+
+      <script>
+
+        // Isotope grid.
+        var $grid = $('.grid').isotope({
+          itemSelector: '.list-item',
+          layoutMode: 'fitRows',
+          transitionDuration: 0,
+          stagger: 10,
+          initLayout: false,
+          getSortData: {
+            name: '.name',
+            symbol: '.symbol',
+            number: '.number parseInt',
+            category: '[data-category]',
+            weight: function (itemElem) {
+              var weight = $(itemElem).find('.weight').text();
+              return parseFloat(weight.replace(/[\(\)]/g, ''));
+            }
+          }
+        });
+
+        // Bind filter button click.
+        $('#filters').on('click', 'button', function () {
+          var filterValue = $(this).attr('data-filter');
+          localStorage.setItem('filterValue', filterValue);
+          $grid.isotope({ filter: filterValue });
+        });
+
+        // Change is-checked class on buttons.
+        $('.button-group').each(function (i, buttonGroup) {
+          var $buttonGroup = $(buttonGroup);
+          $buttonGroup.on('click', 'button', function () {
+            $buttonGroup.find('.is-checked').removeClass('is-checked');
+            $(this).addClass('is-checked');
+          });
+        });
+
+        function update_isotope() {
+          // Retrieve cached button click.
+          var defaultFilterValue = localStorage.getItem('filterValue');
+          if (defaultFilterValue == null) {
+            defaultFilterValue = ".highlight"
+          }
+          $grid.isotope({ filter: defaultFilterValue });
+          var buttons = document.getElementsByClassName("button");
+          for (var currButton of buttons) {
+            if (currButton.getAttribute('data-filter') == defaultFilterValue) {
+              currButton.classList.add('is-checked');
+            } else {
+              currButton.classList.remove('is-checked');
+            }
+          }
+        }
+
+        function toggle_bio() {
+          var x = document.getElementById("more-bio");
+          if (x.style.display === "none") {
+            x.style.display = "block";
+          } else {
+            x.style.display = "none";
+          }
+        }
+
+        function toggle_highlights() {
+          var x = document.getElementById("main-highlights");
+          var y = document.getElementById("more-highlights");
+          var b = document.getElementById("toggle_highlights_button")
+          if (y.style.display === "none") {
+            x.style.display = "none";
+            y.style.display = "block";
+            b.innerHTML = "Show less"
+            update_isotope();
+          } else {
+            x.style.display = "block";
+            y.style.display = "none";
+            b.innerHTML = "Show more"
+            update_isotope();
+          }
+        }
+
+        update_isotope();
+
+      </script>
+</body>
+
+</html>
