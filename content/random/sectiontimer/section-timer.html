@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson Planner</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #0f0f23;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: #1a1a2e;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    h1 {
+      color: #fff;
+      margin-bottom: 8px;
+      font-size: 2em;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      color: #888;
+      margin-bottom: 32px;
+      font-size: 0.95em;
+    }
+
+    .controls {
+      margin-bottom: 32px;
+    }
+
+    .time-picker {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .time-picker select,
+    .time-picker input[type="number"] {
+      padding: 14px 16px;
+      background: #0f0f23;
+      border: 1px solid #2a2a3e;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1.1em;
+      transition: all 0.2s;
+    }
+
+    .time-picker select {
+      width: 100px;
+      cursor: pointer;
+    }
+
+    .time-picker input[type="number"] {
+      width: 80px;
+      text-align: center;
+    }
+
+    .time-picker select:focus,
+    .time-picker input[type="number"]:focus {
+      outline: none;
+      border-color: #6c5ce7;
+      background: #16162e;
+    }
+
+    .time-picker select option {
+      background: #1a1a2e;
+      color: #fff;
+    }
+
+    .time-colon {
+      color: #6c5ce7;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #aaa;
+      font-weight: 500;
+      font-size: 0.9em;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    select {
+      width: 100%;
+      padding: 14px 16px;
+      background: #0f0f23;
+      border: 1px solid #2a2a3e;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1.1em;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #6c5ce7;
+      background: #16162e;
+    }
+
+    select option {
+      background: #1a1a2e;
+      color: #fff;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      opacity: 1;
+    }
+
+    .add-section {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .add-section input[type="text"] {
+      flex: 1;
+      min-width: 200px;
+      padding: 14px 16px;
+      background: #0f0f23;
+      border: 1px solid #2a2a3e;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1em;
+      transition: all 0.2s;
+    }
+
+    .add-section input[type="text"]:focus {
+      outline: none;
+      border-color: #6c5ce7;
+      background: #16162e;
+    }
+
+    .add-section input[type="number"] {
+      width: 80px;
+      padding: 14px 12px;
+      background: #0f0f23;
+      border: 1px solid #2a2a3e;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1em;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .add-section input[type="number"]:focus {
+      outline: none;
+      border-color: #6c5ce7;
+      background: #16162e;
+    }
+
+    button {
+      padding: 14px 24px;
+      background: #6c5ce7;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    button:hover {
+      background: #5f4fd1;
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .sections {
+      list-style: none;
+    }
+
+    .section {
+      background: #0f0f23;
+      padding: 20px;
+      margin-bottom: 12px;
+      border-radius: 10px;
+      border: 1px solid #2a2a3e;
+      transition: all 0.2s;
+      cursor: move;
+    }
+
+    .section:hover {
+      border-color: #3a3a4e;
+      background: #12122a;
+    }
+
+    .section.dragging {
+      opacity: 0.5;
+    }
+
+    .section.drag-over {
+      border-color: #6c5ce7;
+      background: #16162e;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 12px;
+    }
+
+    .section-name {
+      font-weight: 500;
+      color: #fff;
+      font-size: 1.05em;
+      flex: 1;
+    }
+
+    .section-name input {
+      width: 100%;
+      padding: 6px 10px;
+      background: #1a1a2e;
+      border: 1px solid #2a2a3e;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 1em;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .section-name input:focus {
+      outline: none;
+      border-color: #6c5ce7;
+      background: #16162e;
+    }
+
+    .section-times {
+      display: flex;
+      gap: 20px;
+      color: #888;
+      font-size: 0.9em;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .section-times span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .duration-edit {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .duration-edit input {
+      width: 48px;
+      padding: 6px;
+      background: #1a1a2e;
+      border: 1px solid #2a2a3e;
+      border-radius: 4px;
+      text-align: center;
+      color: #fff;
+      font-size: 0.9em;
+    }
+
+    .duration-edit input:focus {
+      outline: none;
+      border-color: #6c5ce7;
+      background: #16162e;
+    }
+
+    .drag-handle {
+      cursor: move;
+      color: #555;
+      font-size: 1.2em;
+      user-select: none;
+    }
+
+    .delete-btn {
+      background: #2a2a3e;
+      padding: 8px 14px;
+      font-size: 0.85em;
+    }
+
+    .delete-btn:hover {
+      background: #dc3545;
+    }
+
+    .total {
+      margin-top: 32px;
+      padding: 20px;
+      background: linear-gradient(135deg, #6c5ce7 0%, #5f4fd1 100%);
+      color: white;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 1.05em;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #555;
+    }
+
+    .time-display {
+      color: #6c5ce7;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Lesson Planner</h1>
+    <p class="subtitle">Plan your presentation timing</p>
+
+    <div class="controls">
+      <label for="start-hour">Start Time</label>
+      <div class="time-picker">
+        <select id="start-hour">
+          <option value="00">12 AM</option>
+          <option value="01">1 AM</option>
+          <option value="02">2 AM</option>
+          <option value="03">3 AM</option>
+          <option value="04">4 AM</option>
+          <option value="05">5 AM</option>
+          <option value="06">6 AM</option>
+          <option value="07">7 AM</option>
+          <option value="08">8 AM</option>
+          <option value="09" selected>9 AM</option>
+          <option value="10">10 AM</option>
+          <option value="11">11 AM</option>
+          <option value="12">12 PM</option>
+          <option value="13">1 PM</option>
+          <option value="14">2 PM</option>
+          <option value="15">3 PM</option>
+          <option value="16">4 PM</option>
+          <option value="17">5 PM</option>
+          <option value="18">6 PM</option>
+          <option value="19">7 PM</option>
+          <option value="20">8 PM</option>
+          <option value="21">9 PM</option>
+          <option value="22">10 PM</option>
+          <option value="23">11 PM</option>
+        </select>
+        <span class="time-colon">:</span>
+        <input type="number" id="start-minute" min="0" max="59" value="00" placeholder="00">
+      </div>
+    </div>
+
+    <div class="add-section">
+      <input type="text" id="section-name" placeholder="Section name">
+      <input type="number" id="section-minutes" placeholder="Min" min="0">
+      <input type="number" id="section-seconds" placeholder="Sec" min="0" max="59">
+      <button id="add-btn">Add</button>
+    </div>
+
+    <ul class="sections" id="sections-list">
+      <div class="empty-state">
+        <p>Add your first section above</p>
+      </div>
+    </ul>
+
+    <div class="total" id="total-time" style="display: none;">
+      Total: <strong>0m</strong> | End: <strong>--:--</strong>
+    </div>
+  </div>
+
+  <script>
+    let sections = [];
+    let draggedIndex = null;
+
+    function addSection() {
+      const name = document.getElementById('section-name').value.trim();
+      const minutes = parseInt(document.getElementById('section-minutes').value) || 0;
+      const seconds = parseInt(document.getElementById('section-seconds').value) || 0;
+
+      if (!name) {
+        alert('Please enter a section name');
+        return;
+      }
+
+      if (minutes === 0 && seconds === 0) {
+        alert('Please enter a duration');
+        return;
+      }
+
+      const totalSeconds = minutes * 60 + seconds;
+      sections.push({ name, duration: totalSeconds });
+      document.getElementById('section-name').value = '';
+      document.getElementById('section-minutes').value = '';
+      document.getElementById('section-seconds').value = '';
+      renderSections();
+    }
+
+    function deleteSection(index) {
+      sections.splice(index, 1);
+      renderSections();
+    }
+
+    function updateSectionName(index, name) {
+      sections[index].name = name;
+    }
+
+    function updateSectionDuration(index, minutes, seconds) {
+      sections[index].duration = minutes * 60 + seconds;
+      renderSections();
+    }
+
+    function timeToSeconds(hour, minute) {
+      return parseInt(hour) * 3600 + parseInt(minute) * 60;
+    }
+
+    function getStartTime() {
+      const hour = document.getElementById('start-hour').value;
+      const minute = document.getElementById('start-minute').value;
+      return timeToSeconds(hour, minute);
+    }
+
+    function secondsToTime(totalSeconds) {
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    function formatDuration(totalSeconds) {
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      if (minutes === 0) {
+        return `${seconds}s`;
+      } else if (seconds === 0) {
+        return `${minutes}m`;
+      } else {
+        return `${minutes}m ${seconds}s`;
+      }
+    }
+
+    function handleDragStart(e, index) {
+      draggedIndex = index;
+      e.target.classList.add('dragging');
+    }
+
+    function handleDragEnd(e) {
+      e.target.classList.remove('dragging');
+      document.querySelectorAll('.section').forEach(el => el.classList.remove('drag-over'));
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+    }
+
+    function handleDragEnter(e) {
+      if (e.target.classList.contains('section')) {
+        e.target.classList.add('drag-over');
+      }
+    }
+
+    function handleDragLeave(e) {
+      if (e.target.classList.contains('section')) {
+        e.target.classList.remove('drag-over');
+      }
+    }
+
+    function handleDrop(e, dropIndex) {
+      e.preventDefault();
+      if (draggedIndex !== null && draggedIndex !== dropIndex) {
+        const item = sections.splice(draggedIndex, 1)[0];
+        sections.splice(dropIndex, 0, item);
+        renderSections();
+      }
+    }
+
+    function renderSections() {
+      const listEl = document.getElementById('sections-list');
+      const totalEl = document.getElementById('total-time');
+      
+      if (sections.length === 0) {
+        listEl.innerHTML = '<div class="empty-state"><p>Add your first section above</p></div>';
+        totalEl.style.display = 'none';
+        return;
+      }
+
+      let currentSeconds = getStartTime();
+      let totalDuration = 0;
+
+      let html = '';
+      sections.forEach((section, index) => {
+        const startSec = currentSeconds;
+        const endSec = currentSeconds + section.duration;
+        totalDuration += section.duration;
+
+        const minutes = Math.floor(section.duration / 60);
+        const seconds = section.duration % 60;
+
+        html += `
+          <li class="section" 
+              draggable="true" 
+              ondragstart="handleDragStart(event, ${index})"
+              ondragend="handleDragEnd(event)"
+              ondragover="handleDragOver(event)"
+              ondragenter="handleDragEnter(event)"
+              ondragleave="handleDragLeave(event)"
+              ondrop="handleDrop(event, ${index})">
+            <div class="section-header">
+              <span class="drag-handle">⋮⋮</span>
+              <div class="section-name">
+                <input type="text" value="${section.name}" 
+                       onchange="updateSectionName(${index}, this.value)"
+                       onclick="event.stopPropagation()">
+              </div>
+              <button class="delete-btn" onclick="deleteSection(${index})">×</button>
+            </div>
+            <div class="section-times">
+              <span class="duration-edit">
+                <input type="number" value="${minutes}" min="0" 
+                       onchange="updateSectionDuration(${index}, parseInt(this.value) || 0, ${seconds})"
+                       onclick="event.stopPropagation()">m
+                <input type="number" value="${seconds}" min="0" max="59"
+                       onchange="updateSectionDuration(${index}, ${minutes}, parseInt(this.value) || 0)"
+                       onclick="event.stopPropagation()">s
+              </span>
+              <span class="time-display">${secondsToTime(startSec)} → ${secondsToTime(endSec)}</span>
+            </div>
+          </li>
+        `;
+
+        currentSeconds = endSec;
+      });
+
+      listEl.innerHTML = html;
+      totalEl.innerHTML = `Total: <strong>${formatDuration(totalDuration)}</strong> | End: <strong>${secondsToTime(currentSeconds)}</strong>`;
+      totalEl.style.display = 'block';
+    }
+
+    // Wait for DOM to load
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('start-hour').addEventListener('change', renderSections);
+      document.getElementById('start-minute').addEventListener('change', renderSections);
+      document.getElementById('add-btn').addEventListener('click', addSection);
+      
+      // Allow Enter key to add section
+      document.getElementById('section-name').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') addSection();
+      });
+      document.getElementById('section-minutes').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') addSection();
+      });
+      document.getElementById('section-seconds').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') addSection();
+      });
+    });
+  </script>
+</body>
+</html>
